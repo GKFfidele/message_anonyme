@@ -3,63 +3,34 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Voix Libre — Espace de parole anonyme</title>
+  <title>Œuvres Mortes — Espace de partage anonyme</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Mulish:wght@300;400;500&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --cream: #FAF8F4;
-      --ink: #1C1A18;
-      --ink2: #4A4742;
-      --ink3: #8A8680;
-      --border: rgba(28,26,24,0.12);
-      --border2: rgba(28,26,24,0.22);
-      --green: #3B6D11;
-      --green-bg: #EAF3DE;
-      --amber: #854F0B;
-      --amber-bg: #FAEEDA;
-      --red: #A32D2D;
-      --red-bg: #FCEBEB;
-      --purple: #3C3489;
-      --purple-bg: #EEEDFE;
-      --radius: 10px;
+      --cream: #FAF8F4; --ink: #1C1A18; --ink2: #4A4742; --ink3: #8A8680;
+      --border: rgba(28,26,24,0.12); --border2: rgba(28,26,24,0.22);
+      --green: #3B6D11; --green-bg: #EAF3DE; --amber: #854F0B; --amber-bg: #FAEEDA;
+      --red: #A32D2D; --red-bg: #FCEBEB; --purple: #3C3489; --purple-bg: #EEEDFE; --radius: 10px;
     }
-
     html { background: var(--cream); color: var(--ink); font-family: 'Mulish', sans-serif; }
     body { min-height: 100vh; }
-
-    /* NAV */
-    nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.85rem 1.5rem;
-      border-bottom: 0.5px solid var(--border);
-      background: rgba(250,248,244,0.95);
-      backdrop-filter: blur(8px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Lora', serif; font-size: 17px; color: var(--ink); text-decoration: none; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.5rem; border-bottom: 0.5px solid var(--border); background: rgba(250,248,244,0.95); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Lora', serif; font-size: 17px; color: var(--ink); }
     .nav-tabs { display: flex; gap: 4px; }
     .nav-tab { padding: 6px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; background: none; border: 0.5px solid transparent; font-family: 'Mulish', sans-serif; color: var(--ink2); transition: all 0.15s; }
     .nav-tab:hover { border-color: var(--border); }
     .nav-tab.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
-
-    /* PAGES */
     .page { display: none; max-width: 640px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
     .page.active { display: block; }
-
-    /* HERO */
     .hero { text-align: center; padding: 2rem 0 1.75rem; }
     .hero-icon { width: 60px; height: 60px; border-radius: 50%; border: 0.5px solid var(--border2); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; background: white; }
     .hero h1 { font-family: 'Lora', serif; font-size: 28px; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
     .hero p { font-size: 15px; color: var(--ink2); line-height: 1.7; font-style: italic; max-width: 400px; margin: 0 auto; }
     .anon-pill { display: inline-flex; align-items: center; gap: 7px; margin-top: 1rem; padding: 6px 16px; background: white; border: 0.5px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--ink3); }
-
     hr.divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
-
-    /* TYPE SELECTOR */
     .type-label { font-size: 12px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.6rem; }
     .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
     .type-card { padding: 1rem; border: 0.5px solid var(--border); border-radius: var(--radius); cursor: pointer; background: white; transition: all 0.15s; text-align: left; }
@@ -68,92 +39,62 @@
     .type-card .ico { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; }
     .type-card .name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
     .type-card .desc { font-size: 11px; color: var(--ink3); line-height: 1.4; }
-
-    /* FORM */
     .field { margin-bottom: 1.25rem; }
     .field label { display: block; font-size: 12px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.45rem; }
     .field textarea { width: 100%; font-family: 'Lora', serif; font-size: 14px; color: var(--ink); background: white; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; resize: vertical; min-height: 130px; line-height: 1.75; outline: none; transition: border-color 0.15s; }
     .field textarea:focus { border-color: var(--border2); }
     .char-hint { font-size: 11px; color: var(--ink3); text-align: right; margin-top: 4px; }
-
-    /* URGENCY */
     .urg-row { display: flex; gap: 8px; }
     .urg-btn { flex: 1; padding: 0.6rem; border: 0.5px solid var(--border); border-radius: var(--radius); background: white; font-family: 'Mulish', sans-serif; font-size: 12px; cursor: pointer; color: var(--ink2); transition: all 0.15s; }
     .urg-btn:hover { border-color: var(--border2); }
     .urg-btn.sel-1 { background: var(--green-bg); border-color: #97C459; color: var(--green); font-weight: 500; }
     .urg-btn.sel-2 { background: var(--amber-bg); border-color: #EF9F27; color: var(--amber); font-weight: 500; }
     .urg-btn.sel-3 { background: var(--red-bg); border-color: #F09595; color: var(--red); font-weight: 500; }
-
-    /* PRIVACY NOTE */
     .privacy-note { display: flex; gap: 10px; align-items: flex-start; padding: 0.85rem 1rem; background: white; border-left: 2px solid var(--border); margin: 1.25rem 0; }
     .privacy-note p { font-size: 12px; color: var(--ink3); line-height: 1.6; font-style: italic; }
-
-    /* SUBMIT BTN */
     .btn-primary { width: 100%; padding: 0.9rem; background: var(--ink); color: var(--cream); border: none; border-radius: var(--radius); font-family: 'Mulish', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.2px; }
     .btn-primary:hover { opacity: 0.82; }
     .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* SUCCESS */
     #success-screen { display: none; text-align: center; padding: 3rem 1rem; }
     #success-screen h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; margin-bottom: 0.5rem; }
     #success-screen p { font-size: 14px; color: var(--ink2); line-height: 1.7; font-style: italic; }
     .ref-code { display: inline-block; margin: 1.25rem 0 0.5rem; padding: 0.6rem 1.5rem; background: white; border: 0.5px solid var(--border); border-radius: var(--radius); font-family: 'Courier New', monospace; font-size: 15px; letter-spacing: 3px; color: var(--ink); }
     .btn-link { background: none; border: none; font-family: 'Mulish', sans-serif; font-size: 13px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-top: 1rem; }
-
-    /* ADMIN LOGIN */
     #login-wall { text-align: center; padding: 3rem 1.5rem; border: 0.5px solid var(--border); border-radius: 16px; background: white; max-width: 380px; margin: 2rem auto; }
     #login-wall h2 { font-family: 'Lora', serif; font-size: 20px; font-weight: 400; margin-bottom: 0.4rem; }
     #login-wall p { font-size: 13px; color: var(--ink3); font-style: italic; margin-bottom: 1.25rem; }
     #login-wall input { width: 100%; font-family: 'Mulish', sans-serif; font-size: 14px; padding: 0.65rem 0.9rem; border: 0.5px solid var(--border); border-radius: var(--radius); outline: none; background: var(--cream); color: var(--ink); margin-bottom: 0.75rem; }
     #login-wall input:focus { border-color: var(--border2); }
     #pw-err { font-size: 12px; color: var(--red); margin-top: 0.4rem; display: none; }
-
-    /* ADMIN PANEL */
     #admin-panel { display: none; }
     .admin-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); }
     .admin-top h2 { font-family: 'Lora', serif; font-size: 20px; font-weight: 400; }
-
     .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 1.25rem; }
     .stat { background: white; border-radius: var(--radius); padding: 0.85rem; text-align: center; border: 0.5px solid var(--border); }
     .stat .n { font-size: 24px; font-weight: 500; color: var(--ink); }
     .stat .l { font-size: 11px; color: var(--ink3); margin-top: 2px; }
-
     .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
     .fpill { padding: 5px 13px; border: 0.5px solid var(--border); border-radius: 20px; font-size: 12px; background: none; cursor: pointer; font-family: 'Mulish', sans-serif; color: var(--ink2); transition: all 0.15s; }
     .fpill:hover { border-color: var(--border2); }
     .fpill.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
-
-    /* REPORT CARDS */
     .rcard { border: 0.5px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; background: white; }
     .rcard.new-item { border-left: 2.5px solid var(--ink2); border-radius: 0 12px 12px 0; }
     .rcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 0.6rem; }
     .badge { font-size: 11px; padding: 3px 10px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
-    .b-Signalement { background: var(--red-bg); color: var(--red); }
-    .b-Préoccupation { background: var(--amber-bg); color: var(--amber); }
-    .b-Dérive { background: var(--purple-bg); color: var(--purple); }
-    .b-Proposition { background: var(--green-bg); color: var(--green); }
     .rcard-date { font-size: 11px; color: var(--ink3); }
     .rcard-body { font-size: 13px; color: var(--ink); line-height: 1.65; margin-bottom: 0.75rem; font-style: italic; }
     .rcard-footer { display: flex; align-items: center; gap: 8px; }
     .urg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .ud-1 { background: #97C459; }
-    .ud-2 { background: #EF9F27; }
-    .ud-3 { background: #E24B4A; }
+    .ud-1 { background: #97C459; } .ud-2 { background: #EF9F27; } .ud-3 { background: #E24B4A; }
     .urg-text { font-size: 11px; color: var(--ink3); }
     .rcard-actions { margin-left: auto; }
     .action-btn { font-size: 11px; padding: 4px 11px; border: 0.5px solid var(--border); border-radius: 6px; background: none; cursor: pointer; font-family: 'Mulish', sans-serif; color: var(--ink2); transition: all 0.15s; }
     .action-btn:hover { background: var(--cream); }
     .action-btn.done { background: var(--green-bg); border-color: #97C459; color: var(--green); }
-
     .empty { text-align: center; padding: 2.5rem 1rem; color: var(--ink3); font-size: 14px; font-style: italic; }
     .loading { text-align: center; padding: 2rem; color: var(--ink3); font-size: 13px; }
     .err-msg { font-size: 12px; color: var(--red); text-align: center; margin-top: 0.5rem; display: none; }
-
-    @media (max-width: 500px) {
-      .type-grid { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      nav { padding: 0.75rem 1rem; }
-    }
+    @media (max-width: 500px) { .type-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, 1fr); } nav { padding: 0.75rem 1rem; } }
   </style>
 </head>
 <body>
@@ -164,17 +105,16 @@
       <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke="#1C1A18" stroke-width="1.2" fill="none"/>
       <circle cx="12" cy="11" r="2" fill="#1C1A18" opacity="0.35"/>
     </svg>
-    Voix Libre
+    Œuvres Mortes
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('membre', this)">Soumettre</button>
+    <button class="nav-tab active" onclick="showPage('membre', this)">Partager</button>
     <button class="nav-tab" onclick="showPage('admin', this)">Responsables</button>
   </div>
 </nav>
 
-<!-- ══════════════ PAGE MEMBRE ══════════════ -->
+<!-- PAGE MEMBRE -->
 <div id="page-membre" class="page active">
-
   <div id="form-area">
     <div class="hero">
       <div class="hero-icon">
@@ -183,69 +123,66 @@
           <circle cx="12" cy="10" r="2.5" fill="#1C1A18" opacity="0.2"/>
         </svg>
       </div>
-      <h1>Voix Libre</h1>
-      <p>Un espace pour dire ce que tu vois,<br>sans jamais avoir à te montrer.</p>
+      <h1>Œuvres Mortes</h1>
+      <p>Partage anonymement un sujet de prière,<br>un témoignage ou une question sur les œuvres mortes.</p>
       <span class="anon-pill">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
           <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke="#8A8680" stroke-width="1.5" fill="none"/>
         </svg>
-        Identité jamais demandée · Zéro traçage
+        Partage anonyme · Zéro traçage
       </span>
     </div>
 
     <hr class="divider"/>
 
-    <p class="type-label">De quel type est ton message ?</p>
+    <p class="type-label">Quel est ton partage ?</p>
     <div class="type-grid">
-      <div class="type-card" data-type="Signalement" onclick="selectType(this)">
-        <div class="ico" style="background:#FCEBEB">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="12" y1="9" x2="12" y2="13" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="12" cy="17" r="1" fill="#A32D2D"/>
-          </svg>
-        </div>
-        <div class="name">Signalement</div>
-        <div class="desc">Quelque chose de grave que j'ai observé</div>
-      </div>
-      <div class="type-card" data-type="Préoccupation" onclick="selectType(this)">
-        <div class="ico" style="background:#FAEEDA">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9" stroke="#854F0B" stroke-width="1.8"/>
-            <line x1="12" y1="8" x2="12" y2="12" stroke="#854F0B" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="12" cy="16" r="1" fill="#854F0B"/>
-          </svg>
-        </div>
-        <div class="name">Préoccupation</div>
-        <div class="desc">Quelque chose qui me pèse sur le cœur</div>
-      </div>
-      <div class="type-card" data-type="Dérive" onclick="selectType(this)">
-        <div class="ico" style="background:#EEEDFE">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="M12 5v9M8 10l4 4 4-4" stroke="#3C3489" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="6" y1="19" x2="18" y2="19" stroke="#3C3489" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="name">Dérive à soulever</div>
-        <div class="desc">Un comportement qui s'écarte de nos valeurs</div>
-      </div>
-      <div class="type-card" data-type="Proposition" onclick="selectType(this)">
+      <div class="type-card" data-type="Sujet de prière" onclick="selectType(this)">
         <div class="ico" style="background:#EAF3DE">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9" stroke="#3B6D11" stroke-width="1.8"/>
-            <line x1="12" y1="8" x2="12" y2="16" stroke="#3B6D11" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="8" y1="12" x2="16" y2="12" stroke="#3B6D11" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke="#3B6D11" stroke-width="1.8" fill="none"/>
+            <circle cx="12" cy="11" r="2" fill="#3B6D11" opacity="0.5"/>
           </svg>
         </div>
-        <div class="name">Proposition</div>
-        <div class="desc">Un sujet ou une idée à traiter ensemble</div>
+        <div class="name">Sujet de prière</div>
+        <div class="desc">Un sujet pour lequel tu demandes l'intercession</div>
+      </div>
+      <div class="type-card" data-type="Témoignage" onclick="selectType(this)">
+        <div class="ico" style="background:#FAEEDA">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#854F0B" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Témoignage</div>
+        <div class="desc">Une expérience vécue que tu veux partager</div>
+      </div>
+      <div class="type-card" data-type="Question" onclick="selectType(this)">
+        <div class="ico" style="background:#EEEDFE">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#3C3489" stroke-width="1.8"/>
+            <path d="M9.5 9a2.5 2.5 0 015 .5c0 2-2.5 2.5-2.5 4" stroke="#3C3489" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="17" r="1" fill="#3C3489"/>
+          </svg>
+        </div>
+        <div class="name">Question</div>
+        <div class="desc">Une question sur les œuvres mortes ou la foi</div>
+      </div>
+      <div class="type-card" data-type="Oeuvre pratiquée" onclick="selectType(this)">
+        <div class="ico" style="background:#FCEBEB">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12l2 2 4-4" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="9" stroke="#A32D2D" stroke-width="1.8"/>
+          </svg>
+        </div>
+        <div class="name">Œuvre pratiquée</div>
+        <div class="desc">Une œuvre morte que tu pratiques et veux partager</div>
       </div>
     </div>
 
     <div class="field">
-      <label>Ton message</label>
+      <label>Ton partage</label>
       <textarea id="message" maxlength="800"
-        placeholder="Décris librement ce que tu vois, ce qui te préoccupe, ou ce que tu proposes. Prends le temps qu'il faut."
+        placeholder="Partage librement ton sujet de prière, ton témoignage, ta question ou l'oeuvre que tu pratiques..."
         oninput="document.getElementById('cc').textContent=this.value.length">
       </textarea>
       <div class="char-hint"><span id="cc">0</span>/800</div>
@@ -264,12 +201,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px">
         <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke="#8A8680" stroke-width="1.5" fill="none"/>
       </svg>
-      <p>Ce message est transmis directement aux responsables sans aucun lien avec ton identité. Aucun nom, aucun compte, aucune adresse IP n'est enregistrée. Tu es entièrement protégé(e).</p>
+      <p>Ton partage est transmis anonymement aux responsables. Aucun nom, aucun compte, aucune adresse IP n'est enregistrée. Tu es entièrement protégé(e).</p>
     </div>
 
-    <button class="btn-primary" id="submitBtn" onclick="soumettre()">
-      Transmettre anonymement
-    </button>
+    <button class="btn-primary" id="submitBtn" onclick="soumettre()">Partager anonymement</button>
     <p class="err-msg" id="submit-err"></p>
   </div>
 
@@ -278,26 +213,24 @@
       <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" fill="#EAF3DE" stroke="#97C459" stroke-width="1"/>
       <path d="M8.5 12l2.5 2.5 4.5-4.5" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <h2>Message transmis</h2>
-    <p>Les responsables le recevront et l'examineront<br>avec le sérieux qu'il mérite.</p>
+    <h2>Merci pour ton partage</h2>
+    <p>Ton partage a été transmis anonymement.<br>Les responsables en prendront soin.</p>
     <div class="ref-code" id="refcode">REF-XXXX</div>
     <p style="font-size:12px;color:#8A8680;margin-top:0.25rem">Note ce code si tu veux faire un suivi</p>
     <br>
-    <button class="btn-link" onclick="resetForm()">Soumettre un autre message →</button>
+    <button class="btn-link" onclick="resetForm()">Faire un autre partage →</button>
   </div>
-
 </div>
 
-<!-- ══════════════ PAGE ADMIN ══════════════ -->
+<!-- PAGE ADMIN -->
 <div id="page-admin" class="page">
-
   <div id="login-wall">
     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="margin:0 auto 0.75rem;display:block;opacity:0.35">
       <rect x="3" y="11" width="18" height="11" rx="2" stroke="#1C1A18" stroke-width="1.5"/>
       <path d="M7 11V7a5 5 0 0110 0v4" stroke="#1C1A18" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
     <h2>Espace responsables</h2>
-    <p>Saisissez le mot de passe pour accéder aux messages</p>
+    <p>Saisissez le mot de passe pour accéder aux partages</p>
     <input type="password" id="pw" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')login()"/>
     <button class="btn-primary" style="width:auto;padding:0.65rem 2rem" onclick="login()">Accéder</button>
     <p id="pw-err">Mot de passe incorrect</p>
@@ -305,47 +238,35 @@
 
   <div id="admin-panel">
     <div class="admin-top">
-      <h2>Messages reçus</h2>
+      <h2>Partages reçus</h2>
       <button class="btn-link" onclick="logout()">Déconnexion</button>
     </div>
-
     <div class="stats-row">
       <div class="stat"><div class="n" id="s-total">—</div><div class="l">Total</div></div>
       <div class="stat"><div class="n" id="s-new">—</div><div class="l">Non traités</div></div>
       <div class="stat"><div class="n" id="s-urgent">—</div><div class="l">Urgents</div></div>
       <div class="stat"><div class="n" id="s-done">—</div><div class="l">Traités</div></div>
     </div>
-
     <div class="filters">
       <button class="fpill active" onclick="setFilter('tous',this)">Tous</button>
-      <button class="fpill" onclick="setFilter('Signalement',this)">Signalement</button>
-      <button class="fpill" onclick="setFilter('Préoccupation',this)">Préoccupation</button>
-      <button class="fpill" onclick="setFilter('Dérive',this)">Dérive</button>
-      <button class="fpill" onclick="setFilter('Proposition',this)">Proposition</button>
+      <button class="fpill" onclick="setFilter('Sujet de prière',this)">Sujet de prière</button>
+      <button class="fpill" onclick="setFilter('Témoignage',this)">Témoignage</button>
+      <button class="fpill" onclick="setFilter('Question',this)">Question</button>
+      <button class="fpill" onclick="setFilter('Oeuvre pratiquée',this)">Œuvre pratiquée</button>
       <button class="fpill" onclick="setFilter('urgent',this)">Urgents</button>
     </div>
-
-    <div id="reports-list">
-      <div class="loading">Chargement des messages…</div>
-    </div>
+    <div id="reports-list"><div class="loading">Chargement des partages…</div></div>
   </div>
-
 </div>
 
-<!-- ══════════════ SCRIPT ══════════════ -->
 <script>
-const SUPABASE_URL  = 'https://sxtftuxlpjedmbtxeqiq.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dGZ0dXhscGplZG1idHhlcWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMTY3ODMsImV4cCI6MjA5Mjg5Mjc4M30.RGi6CTbdDKc1jSaUf7ifQTMR99XIrDKutX1SjXhJmbk';
-const ADMIN_PASS    = 'Cherubin123';
-
+const SUPABASE_URL = 'https://sxtftuxlpjedmbtxeqiq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dGZ0dXhscGplZG1idHhlcWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMTY3ODMsImV4cCI6MjA5Mjg5Mjc4M30.RGi6CTbdDKc1jSaUf7ifQTMR99XIrDKutX1SjXhJmbk';
+const ADMIN_PASS = 'Cherubin123';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let selectedType = null;
-let selectedUrg  = 0;
-let currentFilter = 'tous';
-let allReports   = [];
+let selectedType = null, selectedUrg = 0, currentFilter = 'tous', allReports = [];
 
-/* ── Navigation ── */
 function showPage(p, btn) {
   document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
@@ -353,7 +274,6 @@ function showPage(p, btn) {
   btn.classList.add('active');
 }
 
-/* ── Formulaire membre ── */
 function selectType(el) {
   document.querySelectorAll('.type-card').forEach(x => x.classList.remove('sel'));
   el.classList.add('sel');
@@ -368,74 +288,52 @@ function selectUrg(btn, n) {
 
 function showErr(msg) {
   const el = document.getElementById('submit-err');
-  el.textContent = msg;
-  el.style.display = 'block';
+  el.textContent = msg; el.style.display = 'block';
 }
 
 async function soumettre() {
   document.getElementById('submit-err').style.display = 'none';
   const msg = document.getElementById('message').value.trim();
-
-  if (!selectedType)  { showErr('Choisis le type de message.'); return; }
-  if (!msg)           { showErr('Écris ton message.'); return; }
-  if (!selectedUrg)   { showErr("Indique le niveau d'urgence."); return; }
-
+  if (!selectedType) { showErr('Choisis le type de partage.'); return; }
+  if (!msg) { showErr('Écris ton partage.'); return; }
+  if (!selectedUrg) { showErr("Indique le niveau d'urgence."); return; }
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours…';
-
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
   const ref = 'REF-' + Math.floor(1000 + Math.random() * 9000);
-
-  const { error } = await sb.from('messages').insert([{
-    ref_code : ref,
-    type     : selectedType,
-    message  : msg,
-    urgence  : selectedUrg,
-    statut   : 'nouveau'
-  }]);
-
+  const { error } = await sb.from('messages').insert([{ ref_code: ref, type: selectedType, message: msg, urgence: selectedUrg, statut: 'nouveau' }]);
   if (error) {
-    btn.disabled = false;
-    btn.textContent = 'Transmettre anonymement';
-    showErr('Erreur lors de l\'envoi. Vérifie ta connexion et réessaie.');
-    console.error(error);
-    return;
+    btn.disabled = false; btn.textContent = 'Partager anonymement';
+    showErr("Erreur lors de l'envoi. Vérifie ta connexion et réessaie."); return;
   }
-
   document.getElementById('refcode').textContent = ref;
   document.getElementById('form-area').style.display = 'none';
   document.getElementById('success-screen').style.display = 'block';
 }
 
 function resetForm() {
-  selectedType = null;
-  selectedUrg  = 0;
+  selectedType = null; selectedUrg = 0;
   document.querySelectorAll('.type-card').forEach(x => x.classList.remove('sel'));
   document.querySelectorAll('.urg-btn').forEach(x => x.classList.remove('sel-1','sel-2','sel-3'));
   document.getElementById('message').value = '';
   document.getElementById('cc').textContent = '0';
   document.getElementById('submit-err').style.display = 'none';
   document.getElementById('submitBtn').disabled = false;
-  document.getElementById('submitBtn').textContent = 'Transmettre anonymement';
+  document.getElementById('submitBtn').textContent = 'Partager anonymement';
   document.getElementById('success-screen').style.display = 'none';
   document.getElementById('form-area').style.display = 'block';
 }
 
-/* ── Admin ── */
 function login() {
-  const pw = document.getElementById('pw').value;
-  if (pw === ADMIN_PASS) {
+  if (document.getElementById('pw').value === ADMIN_PASS) {
     document.getElementById('login-wall').style.display = 'none';
     document.getElementById('admin-panel').style.display = 'block';
     loadReports();
-  } else {
-    document.getElementById('pw-err').style.display = 'block';
-  }
+  } else { document.getElementById('pw-err').style.display = 'block'; }
 }
 
 function logout() {
   document.getElementById('admin-panel').style.display = 'none';
-  document.getElementById('login-wall').style.display  = 'block';
+  document.getElementById('login-wall').style.display = 'block';
   document.getElementById('pw').value = '';
   document.getElementById('pw-err').style.display = 'none';
   allReports = [];
@@ -443,16 +341,8 @@ function logout() {
 
 async function loadReports() {
   document.getElementById('reports-list').innerHTML = '<div class="loading">Chargement…</div>';
-  const { data, error } = await sb
-    .from('messages')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    document.getElementById('reports-list').innerHTML = '<div class="empty">Erreur de chargement. Vérifie la connexion.</div>';
-    console.error(error);
-    return;
-  }
+  const { data, error } = await sb.from('messages').select('*').order('created_at', { ascending: false });
+  if (error) { document.getElementById('reports-list').innerHTML = '<div class="empty">Erreur de chargement.</div>'; return; }
   allReports = data || [];
   renderReports();
 }
@@ -472,32 +362,31 @@ async function toggleStatut(id, current) {
   renderReports();
 }
 
+const badgeColors = {
+  'Sujet de prière': 'background:#EAF3DE;color:#3B6D11',
+  'Témoignage':      'background:#FAEEDA;color:#854F0B',
+  'Question':        'background:#EEEDFE;color:#3C3489',
+  'Oeuvre pratiquée':'background:#FCEBEB;color:#A32D2D'
+};
+
 function renderReports() {
-  const urgLabel = ['', 'Peut attendre', 'Assez urgent', 'Très urgent'];
-
+  const urgLabel = ['','Peut attendre','Assez urgent','Très urgent'];
   let list = allReports;
-  if (currentFilter === 'urgent')      list = allReports.filter(x => x.urgence === 3);
-  else if (currentFilter !== 'tous')   list = allReports.filter(x => x.type === currentFilter);
-
+  if (currentFilter === 'urgent') list = allReports.filter(x => x.urgence === 3);
+  else if (currentFilter !== 'tous') list = allReports.filter(x => x.type === currentFilter);
   document.getElementById('s-total').textContent  = allReports.length;
   document.getElementById('s-new').textContent    = allReports.filter(x => x.statut === 'nouveau').length;
   document.getElementById('s-urgent').textContent = allReports.filter(x => x.urgence === 3).length;
   document.getElementById('s-done').textContent   = allReports.filter(x => x.statut === 'traité').length;
-
   const el = document.getElementById('reports-list');
-
-  if (!list.length) {
-    el.innerHTML = '<div class="empty">Aucun message dans cette catégorie.</div>';
-    return;
-  }
-
+  if (!list.length) { el.innerHTML = '<div class="empty">Aucun partage dans cette catégorie.</div>'; return; }
   el.innerHTML = list.map(r => {
-    const d    = new Date(r.created_at);
-    const date = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    const date = new Date(r.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' });
+    const style = badgeColors[r.type] || 'background:#eee;color:#333';
     return `
       <div class="rcard ${r.statut === 'nouveau' ? 'new-item' : ''}">
         <div class="rcard-top">
-          <span class="badge b-${r.type}">${r.type}</span>
+          <span class="badge" style="${style}">${r.type}</span>
           <span class="rcard-date">${date} · ${r.ref_code}</span>
         </div>
         <div class="rcard-body">"${r.message}"</div>
@@ -505,8 +394,7 @@ function renderReports() {
           <div class="urg-dot ud-${r.urgence}"></div>
           <span class="urg-text">${urgLabel[r.urgence]}</span>
           <div class="rcard-actions">
-            <button class="action-btn ${r.statut === 'traité' ? 'done' : ''}"
-              onclick="toggleStatut(${r.id}, '${r.statut}')">
+            <button class="action-btn ${r.statut === 'traité' ? 'done' : ''}" onclick="toggleStatut(${r.id},'${r.statut}')">
               ${r.statut === 'traité' ? 'Traité ✓' : 'Marquer traité'}
             </button>
           </div>
